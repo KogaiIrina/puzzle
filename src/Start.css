@@ -1,0 +1,45 @@
+.StartButton {
+    font-family: Arial,Helvetica,FreeSans,"Liberation Sans","Nimbus Sans L",sans-serif;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: rgba(199, 224, 224, 0.603);
+    text-shadow: 0 -1px rgba(0,0,0,.1);
+    padding: .1em 1em;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    background: #0c929c linear-gradient(#2e7fb6, #19cfb7);
+    box-shadow: inset #13b0e0 0 -1px 1px, inset 0 1px 1px #2fa7df, #0fd6e4 0 0 0 1px, rgba(21, 154, 187, 0.788) 0 2px 5px;
+    -webkit-animation: pulsate 1.2s linear infinite;
+    animation: pulsate 1.2s linear infinite;
+}
+.StartButton:hover {
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+}
+.StartButton:active {
+    top: 1px;
+    color: #fff;
+    text-shadow: 0 -1px rgba(0,0,0,.3), 0 0 5px #ffd, 0 0 8px #fff;
+    box-shadow: 0 -1px 3px rgba(0,0,0,.3), 0 1px 1px #fff, inset 0 1px 2px rgba(0,0,0,.8), inset 0 -1px 0 rgba(0,0,0,.05);
+}
+
+@keyframes pulsate {
+    50% {color: #fff; text-shadow: 0 -1px rgba(0,0,0,.3), 0 0 5px #ffd, 0 0 8px #fff;}
+}
+
+.Play {
+    font-size: 30px;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 10px;
+}
+
+h1 {
+    color: #fff;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 47px;
+    margin-left: 25px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0  rgb(173, 140, 172);
+}

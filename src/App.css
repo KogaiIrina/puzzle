@@ -1,0 +1,17 @@
+#root {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgb(138, 67, 126), rgb(230, 127, 187), rgb(192, 112, 172));
+    width: 400px;
+    height: 400px;
+    max-height: 400px;
+    margin-top: 150px;
+  }

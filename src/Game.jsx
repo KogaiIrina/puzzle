@@ -1,66 +1,64 @@
-import React from 'react';
+import React, { useEffect, useReducer } from 'react';
 import './Game.css';
 
-const COLOR = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Violet', 'Pink', 'Gray',]
-const PIECES_COUNT = 16;
+const COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'pink', 'gray'];
+const CHECK_INTERVAL_MS = 1500;
 
-export default class Game extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            pazl: ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Violet',
-             'Pink', 'Gray', 'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Violet', 'Pink', 'Gray'],
-             closedCard: []
-        };
-        this.shuffle = (array) => array.sort(() => Math.random() - 0.5);
-        this.handleClick = this.handleClick.bind(this);
-        this.color = 'Red';
-        this.click = false;
-    }
+const ACTIONS= {
+    OPEN: 'open',
+    CHECK: 'check'
+}
 
-    componentDidMount () {
-        this.startGame();
-    }
-
-    startGame () {
-        let newPazl = [...this.state.pazl];
-        const newclosedCard = [...this.state.closedCard];
-
-        for (let i = 0; i < PIECES_COUNT; i++) {
-            newclosedCard.push(<div key={i} className='Piece' onClick={() => this.handleClick(i)} ></div>);
-        }
-        newPazl = this.shuffle(newPazl);
-        this.setState({ pazl: [...newPazl], closedCard: [...newclosedCard]} );
-
-        console.log(newPazl);
-    }
-
-    handleClick(number) {
-
-        const newPazl = [...this.state.pazl];
-        const newclosedCard = [...this.state.closedCard];
-
-
-        for (let i = 0; i < PIECES_COUNT; i++) {
-            if (newPazl[number] === COLOR[i]) {
-                this.color = newPazl[number];
-                newclosedCard.splice(number, 1, <div key={Math.random()} className={this.color} ></div>);
-                this.setState({ pazl: [...newPazl], closedCard: [...newclosedCard] });
+function reducer (state, action) {
+    switch (action.type) {
+        case ACTIONS.OPEN:
+            if (state.openCards.length === 2 || state.openCards.includes(action.payload) || !state.cards[action.payload]) {
+                return {...state}
             }
+            return { ...state, openCards: [...state.openCards, action.payload] };
 
-        }
-    }
-
-
-
-    render () {
-
-
-        return (
-            <div className='AllPieces'>
-                {this.state.closedCard}
-            </div>
-        )
+        case ACTIONS.CHECK:
+            if (state.openCards.length !== 2) {
+                return { ...state };
+            }
+            if (state.cards[state.openCards[0]] !== state.cards[state.openCards[1]]) {
+                return {...state, openCards: []};
+            }
+            const cards = [...state.cards];
+            cards[state.openCards[0]] = undefined;
+            cards[state.openCards[1]] = undefined;
+            return { ...state, cards, openCards: [] };
+        default:
+            throw new Error(`Unsupported action ${JSON.stringify(action)}`);
     }
 }
 
+export default function Game (props) {
+    const [state, dispatch] = useReducer(reducer, {
+        cards: [...COLORS, ...COLORS].sort(() => Math.random() - 0.5),
+        openCards: []
+    });
+
+    const { cards, openCards } = state;
+
+    useEffect(() => {
+        if (openCards.length === 2) {
+            const timeOut = setTimeout(() => dispatch({ type: ACTIONS.CHECK}), CHECK_INTERVAL_MS);
+            return () => clearTimeout(timeOut);
+        }
+    }, [openCards]);
+
+    useEffect(() => {
+        if (cards.every(card => card === undefined)) {
+            props.onGameEnd();
+        }
+    }, [cards]);
+
+    const renderCards = cards.map((card, i) => (<div
+        key={i}
+        className={`Cards${cards[i] ? '' : ' Disappered'}`}
+        onClick={() => dispatch({ type: ACTIONS.OPEN, payload: i})}
+        style={openCards.includes(i) ? {backgroundColor: card} : {}}
+    ></div>));
+    return <div className='CardsContainer'>{renderCards}</div>
+}
