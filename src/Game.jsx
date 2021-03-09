@@ -56,7 +56,7 @@ export default function Game (props) {
 
     const renderCards = cards.map((card, i) => (<div
         key={i}
-        className={`Cards${cards[i] ? '' : ' Disappered'}`}
+        className={`Cards${cards[i] ? '' : ' Disappeared'}`}
         onClick={() => dispatch({ type: ACTIONS.OPEN, payload: i})}
         style={openCards.includes(i) ? {backgroundColor: card} : {}}
     ></div>));
