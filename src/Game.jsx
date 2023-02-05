@@ -33,7 +33,7 @@ function reducer (state, action) {
     }
 }
 
-export default function Game (props) {
+export default function Game ({ onGameEnd }) {
     const [state, dispatch] = useReducer(reducer, {
         cards: [...COLORS, ...COLORS].sort(() => Math.random() - 0.5),
         openCards: []
@@ -50,9 +50,9 @@ export default function Game (props) {
 
     useEffect(() => {
         if (cards.every(card => card === undefined)) {
-            props.onGameEnd();
+            onGameEnd();
         }
-    }, [cards]);
+    }, [cards, onGameEnd]);
 
     const renderCards = cards.map((card, i) => (<div
         key={i}
